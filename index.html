@@ -69,45 +69,6 @@
       border-radius: 4px;
     }
 
-    .cashflow-group {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 10px;
-      align-items: center;
-    }
-
-    .cashflow-group input {
-      flex: 1;
-    }
-
-    .metrics-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 15px;
-      margin-top: 20px;
-    }
-
-    .metric-card {
-      background: white;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .metric-value {
-      font-size: 24px;
-      font-weight: bold;
-      margin-top: 5px;
-    }
-
-    .positive {
-      color: #2e7d32;
-    }
-
-    .negative {
-      color: #c62828;
-    }
-
     .tabs {
       display: flex;
       margin-bottom: 20px;
@@ -133,58 +94,82 @@
     .tab-content.active {
       display: block;
     }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: left;
-    }
-
-    th {
-      background-color: #f2f2f2;
-    }
-
-    tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-
-    .chart-container {
-      height: 300px;
-      margin-top: 20px;
-    }
   </style>
 </head>
 <body>
-  <h1>Advanced NPV Calculator with Accounting Features</h1>
+  <h1>Advanced NPV Calculator</h1>
   <div class="calculator-container">
     <div class="input-section">
       <div class="tabs">
         <div class="tab active" onclick="openTab(event, 'basic')">Basic</div>
         <div class="tab" onclick="openTab(event, 'advanced')">Advanced</div>
       </div>
-
       <div id="basic" class="tab-content active">
-        <!-- Basic form elements -->
+        <label for="initialInvestment">Initial Investment (Rs.):</label>
+        <input type="number" id="initialInvestment" placeholder="Enter initial investment" />
+
+        <label for="discountRate">Discount Rate (%):</label>
+        <input type="number" id="discountRate" placeholder="Enter discount rate" value="10" />
+
+        <label for="numPeriods">Number of Periods (Years):</label>
+        <input type="number" id="numPeriods" placeholder="e.g., 5" />
+
+        <button onclick="generateCashFlows()">Add Cash Flow Inputs</button>
+
+        <div id="cashFlowsContainer"></div>
       </div>
 
       <div id="advanced" class="tab-content">
-        <!-- Advanced form elements -->
+        <p>Advanced options coming soon...</p>
       </div>
     </div>
-
     <div class="result-section">
-      <!-- Result section with metrics and tables -->
+      <h2>Results</h2>
+      <div class="result" id="npvOutput">Enter values and click calculate</div>
+      <button onclick="calculateNPV()">Calculate NPV</button>
     </div>
   </div>
 
   <script>
-    // All JavaScript logic for tab switching, form handling, and calculations goes here.
+    function openTab(evt, tabName) {
+      const contents = document.querySelectorAll('.tab-content');
+      const tabs = document.querySelectorAll('.tab');
+
+      contents.forEach(c => c.classList.remove('active'));
+      tabs.forEach(t => t.classList.remove('active'));
+
+      document.getElementById(tabName).classList.add('active');
+      evt.currentTarget.classList.add('active');
+    }
+
+    function generateCashFlows() {
+      const container = document.getElementById("cashFlowsContainer");
+      container.innerHTML = "";
+      const num = parseInt(document.getElementById("numPeriods").value);
+      for (let i = 1; i <= num; i++) {
+        const label = document.createElement("label");
+        label.textContent = `Year ${i} Cash Flow (Rs.):`;
+        const input = document.createElement("input");
+        input.type = "number";
+        input.id = `cashflow${i}`;
+        container.appendChild(label);
+        container.appendChild(input);
+      }
+    }
+
+    function calculateNPV() {
+      const initial = parseFloat(document.getElementById("initialInvestment").value) || 0;
+      const rate = (parseFloat(document.getElementById("discountRate").value) || 0) / 100;
+      const periods = parseInt(document.getElementById("numPeriods").value);
+
+      let npv = -initial;
+      for (let i = 1; i <= periods; i++) {
+        const cf = parseFloat(document.getElementById(`cashflow${i}`).value) || 0;
+        npv += cf / Math.pow(1 + rate, i);
+      }
+
+      document.getElementById("npvOutput").textContent = `Net Present Value (NPV): Rs. ${npv.toFixed(2)}`;
+    }
   </script>
 </body>
 </html>
