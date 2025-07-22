@@ -1,1026 +1,378 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Advanced Accounting & Financial Analysis Calculator</title>
-  <style>
-    :root {
-      --primary: #2c3e50;
-      --secondary: #3498db;
-      --success: #27ae60;
-      --danger: #e74c3c;
-      --warning: #f39c12;
-      --light: #ecf0f1;
-      --dark: #34495e;
-    }
-    
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f5f7fa;
-      color: #333;
-      line-height: 1.6;
-      padding: 20px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    
-    h1, h2, h3 {
-      color: var(--primary);
-    }
-    
-    h1 {
-      text-align: center;
-      margin-bottom: 30px;
-      padding-bottom: 15px;
-      border-bottom: 2px solid var(--secondary);
-    }
-    
-    .container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 25px;
-    }
-    
-    .panel {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      padding: 20px;
-      margin-bottom: 25px;
-    }
-    
-    .form-group {
-      margin-bottom: 15px;
-    }
-    
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: 600;
-    }
-    
-    input, select {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 16px;
-    }
-    
-    button {
-      background-color: var(--secondary);
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: 600;
-      transition: all 0.3s;
-      width: 100%;
-    }
-    
-    button:hover {
-      background-color: #2980b9;
-      transform: translateY(-2px);
-    }
-    
-    .btn-success {
-      background-color: var(--success);
-    }
-    
-    .btn-danger {
-      background-color: var(--danger);
-    }
-    
-    .btn-warning {
-      background-color: var(--warning);
-    }
-    
-    .result-card {
-      background: var(--light);
-      border-left: 4px solid var(--secondary);
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 0 4px 4px 0;
-    }
-    
-    .result-value {
-      font-size: 24px;
-      font-weight: 700;
-      margin: 10px 0;
-    }
-    
-    .positive {
-      color: var(--success);
-    }
-    
-    .negative {
-      color: var(--danger);
-    }
-    
-    .neutral {
-      color: var(--warning);
-    }
-    
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 15px 0;
-    }
-    
-    th, td {
-      padding: 12px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-    
-    th {
-      background-color: var(--primary);
-      color: white;
-    }
-    
-    tr:nth-child(even) {
-      background-color: #f2f2f2;
-    }
-    
-    .tabs {
-      display: flex;
-      border-bottom: 1px solid #ddd;
-      margin-bottom: 20px;
-    }
-    
-    .tab {
-      padding: 10px 20px;
-      cursor: pointer;
-      border-bottom: 3px solid transparent;
-    }
-    
-    .tab.active {
-      border-bottom: 3px solid var(--secondary);
-      font-weight: 600;
-    }
-    
-    .tab-content {
-      display: none;
-    }
-    
-    .tab-content.active {
-      display: block;
-    }
-    
-    .formula-display {
-      background: #f8f9fa;
-      border-left: 4px solid var(--secondary);
-      padding: 10px;
-      font-family: monospace;
-      margin: 10px 0;
-    }
-    
-    .metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 15px;
-      margin: 20px 0;
-    }
-    
-    .metric-card {
-      background: white;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-    
-    .metric-title {
-      font-size: 14px;
-      color: #7f8c8d;
-      margin-bottom: 5px;
-    }
-    
-    .metric-value {
-      font-size: 22px;
-      font-weight: 700;
-    }
-    
-    .chart-container {
-      height: 300px;
-      margin: 20px 0;
-      background: white;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    @media (max-width: 768px) {
-      .container {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Statements Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
-  <h1>Advanced Accounting & Financial Analysis Calculator</h1>
-  
-  <div class="container">
-    <div class="input-column">
-      <div class="panel">
-        <div class="tabs">
-          <div class="tab active" onclick="openTab(event, 'investment')">Investment</div>
-          <div class="tab" onclick="openTab(event, 'financing')">Financing</div>
-          <div class="tab" onclick="openTab(event, 'operations')">Operations</div>
-        </div>
-        
-        <div id="investment" class="tab-content active">
-          <div class="form-group">
-            <label for="initialInvestment">Initial Investment (₹):</label>
-            <input type="number" id="initialInvestment" placeholder="1000000">
-          </div>
-          
-          <div class="form-group">
-            <label for="projectLife">Project Life (Years):</label>
-            <input type="number" id="projectLife" placeholder="5" value="5">
-          </div>
-          
-          <div class="form-group">
-            <label for="discountRate">Discount Rate (%):</label>
-            <input type="number" id="discountRate" placeholder="10" value="10">
-          </div>
-          
-          <div class="form-group">
-            <label for="taxRate">Corporate Tax Rate (%):</label>
-            <input type="number" id="taxRate" placeholder="30" value="30">
-          </div>
-          
-          <div class="form-group">
-            <label for="inflationRate">Inflation Rate (%):</label>
-            <input type="number" id="inflationRate" placeholder="2" value="2">
-          </div>
-          
-          <div class="form-group">
-            <label for="salvageValue">Salvage Value (₹):</label>
-            <input type="number" id="salvageValue" placeholder="0" value="0">
-          </div>
-          
-          <div class="form-group">
-            <label for="depreciationMethod">Depreciation Method:</label>
-            <select id="depreciationMethod">
-              <option value="straight">Straight Line</option>
-              <option value="double">Double Declining</option>
-              <option value="sum">Sum of Years' Digits</option>
-              <option value="none">None</option>
-            </select>
-          </div>
-        </div>
-        
-        <div id="financing" class="tab-content">
-          <div class="form-group">
-            <label for="debtRatio">Debt Ratio (%):</label>
-            <input type="number" id="debtRatio" placeholder="40" value="40">
-          </div>
-          
-          <div class="form-group">
-            <label for="interestRate">Interest Rate (%):</label>
-            <input type="number" id="interestRate" placeholder="8" value="8">
-          </div>
-          
-          <div class="form-group">
-            <label for="equityCost">Cost of Equity (%):</label>
-            <input type="number" id="equityCost" placeholder="12" value="12">
-          </div>
-          
-          <div class="form-group">
-            <label for="dividendPayout">Dividend Payout Ratio (%):</label>
-            <input type="number" id="dividendPayout" placeholder="30" value="30">
-          </div>
-        </div>
-        
-        <div id="operations" class="tab-content">
-          <div class="form-group">
-            <label for="revenueGrowth">Revenue Growth Rate (%):</label>
-            <input type="number" id="revenueGrowth" placeholder="5" value="5">
-          </div>
-          
-          <div class="form-group">
-            <label for="operatingMargin">Operating Margin (%):</label>
-            <input type="number" id="operatingMargin" placeholder="20" value="20">
-          </div>
-          
-          <div class="form-group">
-            <label for="workingCapital">Working Capital Change (₹):</label>
-            <input type="number" id="workingCapital" placeholder="0" value="0">
-          </div>
-          
-          <div class="form-group">
-            <label for="capex">Annual Capex (₹):</label>
-            <input type="number" id="capex" placeholder="0" value="0">
-          </div>
-        </div>
-        
-        <button class="btn-success" onclick="calculateAll()">Calculate All Metrics</button>
-      </div>
-      
-      <div class="panel">
-        <h3>Cash Flow Projections</h3>
-        <div id="cashFlowInputs"></div>
-        <button onclick="generateCashFlowInputs()">Generate Cash Flow Inputs</button>
-      </div>
-    </div>
-    
-    <div class="output-column">
-      <div class="panel">
-        <h2>Financial Metrics</h2>
-        
-        <div class="metrics-grid">
-          <div class="metric-card">
-            <div class="metric-title">Net Present Value (NPV)</div>
-            <div class="metric-value" id="npvResult">₹0.00</div>
-          </div>
-          
-          <div class="metric-card">
-            <div class="metric-title">Internal Rate of Return (IRR)</div>
-            <div class="metric-value" id="irrResult">0.00%</div>
-          </div>
-          
-          <div class="metric-card">
-            <div class="metric-title">Payback Period</div>
-            <div class="metric-value" id="paybackResult">0 yrs</div>
-          </div>
-          
-          <div class="metric-card">
-            <div class="metric-title">Profitability Index</div>
-            <div class="metric-value" id="piResult">0.00</div>
-          </div>
-          
-          <div class="metric-card">
-            <div class="metric-title">Return on Investment (ROI)</div>
-            <div class="metric-value" id="roiResult">0.00%</div>
-          </div>
-          
-          <div class="metric-card">
-            <div class="metric-title">Weighted Avg Cost of Capital (WACC)</div>
-            <div class="metric-value" id="waccResult">0.00%</div>
-          </div>
-        </div>
-        
-        <div class="result-card">
-          <h3>Investment Decision</h3>
-          <div class="result-value" id="decisionResult">Please calculate to see results</div>
-        </div>
-      </div>
-      
-      <div class="panel">
-        <h2>Accounting Formulas & Results</h2>
-        
-        <div class="tabs">
-          <div class="tab active" onclick="openFormulaTab(event, 'financial')">Financial</div>
-          <div class="tab" onclick="openFormulaTab(event, 'ratios')">Ratios</div>
-          <div class="tab" onclick="openFormulaTab(event, 'valuation')">Valuation</div>
-        </div>
-        
-        <div id="financial" class="tab-content active">
-          <h3>Free Cash Flow Calculation</h3>
-          <div class="formula-display">
-            FCF = EBIT × (1 - Tax Rate) + Depreciation - Capex - ΔWorking Capital
-          </div>
-          <div id="fcfTable"></div>
-          
-          <h3>Depreciation Schedule</h3>
-          <div id="depreciationTable"></div>
-        </div>
-        
-        <div id="ratios" class="tab-content">
-          <div class="metrics-grid">
-            <div class="metric-card">
-              <div class="metric-title">Current Ratio</div>
-              <div class="formula-display">Current Assets / Current Liabilities</div>
-              <div class="metric-value" id="currentRatio">0.00</div>
-            </div>
-            
-            <div class="metric-card">
-              <div class="metric-title">Debt-to-Equity</div>
-              <div class="formula-display">Total Debt / Total Equity</div>
-              <div class="metric-value" id="deRatio">0.00</div>
-            </div>
-            
-            <div class="metric-card">
-              <div class="metric-title">Gross Margin</div>
-              <div class="formula-display">(Revenue - COGS) / Revenue</div>
-              <div class="metric-value" id="grossMargin">0.00%</div>
-            </div>
-            
-            <div class="metric-card">
-              <div class="metric-title">Operating Margin</div>
-              <div class="formula-display">Operating Income / Revenue</div>
-              <div class="metric-value" id="operatingMarginResult">0.00%</div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="valuation" class="tab-content">
-          <div class="metrics-grid">
-            <div class="metric-card">
-              <div class="metric-title">Discounted Cash Flow (DCF)</div>
-              <div class="formula-display">Σ(FCF / (1+WACC)^n) + Terminal Value</div>
-              <div class="metric-value" id="dcfValue">₹0.00</div>
-            </div>
-            
-            <div class="metric-card">
-              <div class="metric-title">Enterprise Value (EV)</div>
-              <div class="formula-display">Market Cap + Debt - Cash</div>
-              <div class="metric-value" id="evValue">₹0.00</div>
-            </div>
-            
-            <div class="metric-card">
-              <div class="metric-title">EBITDA Multiple</div>
-              <div class="formula-display">EV / EBITDA</div>
-              <div class="metric-value" id="ebitdaMultiple">0.00x</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="panel">
-        <h2>Financial Statements</h2>
-        
-        <div class="tabs">
-          <div class="tab active" onclick="openStatementTab(event, 'income')">Income Statement</div>
-          <div class="tab" onclick="openStatementTab(event, 'balance')">Balance Sheet</div>
-          <div class="tab" onclick="openStatementTab(event, 'cashflow')">Cash Flow</div>
-        </div>
-        
-        <div id="income" class="tab-content active">
-          <div id="incomeStatement"></div>
-        </div>
-        
-        <div id="balance" class="tab-content">
-          <div id="balanceSheet"></div>
-        </div>
-        
-        <div id="cashflow" class="tab-content">
-          <div id="cashFlowStatement"></div>
-        </div>
-      </div>
-    </div>
-  </div>
+    <div class="container">
+        <header>
+            <h1>Financial Statements Calculator</h1>
+            <p>Enter your financial data to generate various financial statements</p>
+        </header>
 
-  <script>
-    // Global variables
-    let financialData = {};
-    
-    // Tab functions
-    function openTab(evt, tabName) {
-      const tabContents = document.querySelectorAll('.input-column .tab-content');
-      const tabs = document.querySelectorAll('.input-column .tab');
-      
-      tabContents.forEach(content => content.classList.remove('active'));
-      tabs.forEach(tab => tab.classList.remove('active'));
-      
-      document.getElementById(tabName).classList.add('active');
-      evt.currentTarget.classList.add('active');
-    }
-    
-    function openFormulaTab(evt, tabName) {
-      const tabContents = document.querySelectorAll('.output-column #accounting-formulas .tab-content');
-      const tabs = document.querySelectorAll('.output-column #accounting-formulas .tabs .tab');
-      
-      tabContents.forEach(content => content.classList.remove('active'));
-      tabs.forEach(tab => tab.classList.remove('active'));
-      
-      document.getElementById(tabName).classList.add('active');
-      evt.currentTarget.classList.add('active');
-    }
-    
-    function openStatementTab(evt, tabName) {
-      const tabContents = document.querySelectorAll('.output-column #financial-statements .tab-content');
-      const tabs = document.querySelectorAll('.output-column #financial-statements .tabs .tab');
-      
-      tabContents.forEach(content => content.classList.remove('active'));
-      tabs.forEach(tab => tab.classList.remove('active'));
-      
-      document.getElementById(tabName).classList.add('active');
-      evt.currentTarget.classList.add('active');
-    }
-    
-    // Generate cash flow inputs
-    function generateCashFlowInputs() {
-      const container = document.getElementById('cashFlowInputs');
-      const years = parseInt(document.getElementById('projectLife').value) || 0;
-      
-      container.innerHTML = '';
-      
-      for (let i = 1; i <= years; i++) {
-        const div = document.createElement('div');
-        div.className = 'form-group';
-        div.innerHTML = `
-          <label for="year${i}Revenue">Year ${i} Revenue (₹):</label>
-          <input type="number" id="year${i}Revenue" placeholder="Revenue for year ${i}">
-          
-          <label for="year${i}COGS">Year ${i} COGS (₹):</label>
-          <input type="number" id="year${i}COGS" placeholder="Cost of goods sold for year ${i}">
-          
-          <label for="year${i}Expenses">Year ${i} Operating Expenses (₹):</label>
-          <input type="number" id="year${i}Expenses" placeholder="Operating expenses for year ${i}">
-        `;
-        container.appendChild(div);
-      }
-    }
-    
-    // Main calculation function
-    function calculateAll() {
-      // Get input values
-      const initialInvestment = parseFloat(document.getElementById('initialInvestment').value) || 0;
-      const projectLife = parseInt(document.getElementById('projectLife').value) || 0;
-      const discountRate = parseFloat(document.getElementById('discountRate').value) / 100 || 0;
-      const taxRate = parseFloat(document.getElementById('taxRate').value) / 100 || 0;
-      const inflationRate = parseFloat(document.getElementById('inflationRate').value) / 100 || 0;
-      const salvageValue = parseFloat(document.getElementById('salvageValue').value) || 0;
-      const depreciationMethod = document.getElementById('depreciationMethod').value;
-      
-      // Financing inputs
-      const debtRatio = parseFloat(document.getElementById('debtRatio').value) / 100 || 0;
-      const interestRate = parseFloat(document.getElementById('interestRate').value) / 100 || 0;
-      const equityCost = parseFloat(document.getElementById('equityCost').value) / 100 || 0;
-      const dividendPayout = parseFloat(document.getElementById('dividendPayout').value) / 100 || 0;
-      
-      // Operations inputs
-      const revenueGrowth = parseFloat(document.getElementById('revenueGrowth').value) / 100 || 0;
-      const operatingMargin = parseFloat(document.getElementById('operatingMargin').value) / 100 || 0;
-      const workingCapital = parseFloat(document.getElementById('workingCapital').value) || 0;
-      const capex = parseFloat(document.getElementById('capex').value) || 0;
-      
-      // Calculate WACC
-      const wacc = (debtRatio * interestRate * (1 - taxRate)) + ((1 - debtRatio) * equityCost);
-      document.getElementById('waccResult').textContent = `${(wacc * 100).toFixed(2)}%`;
-      
-      // Store financial data
-      financialData = {
-        initialInvestment,
-        projectLife,
-        discountRate,
-        taxRate,
-        inflationRate,
-        salvageValue,
-        depreciationMethod,
-        debtRatio,
-        interestRate,
-        equityCost,
-        dividendPayout,
-        revenueGrowth,
-        operatingMargin,
-        workingCapital,
-        capex,
-        wacc
-      };
-      
-      // Generate revenue projections
-      let revenues = [];
-      let cogs = [];
-      let expenses = [];
-      
-      for (let i = 1; i <= projectLife; i++) {
-        const revenueInput = parseFloat(document.getElementById(`year${i}Revenue`).value);
-        const cogsInput = parseFloat(document.getElementById(`year${i}COGS`).value);
-        const expensesInput = parseFloat(document.getElementById(`year${i}Expenses`).value);
-        
-        if (i === 1) {
-          revenues.push(revenueInput || 1000000); // Default first year revenue
-          cogs.push(cogsInput || revenues[0] * 0.6); // Default 60% COGS
-          expenses.push(expensesInput || revenues[0] * 0.2); // Default 20% expenses
-        } else {
-          revenues.push(revenues[i-2] * (1 + revenueGrowth));
-          cogs.push(cogs[i-2] * (1 + revenueGrowth * 0.9)); // COGS grows slightly slower
-          expenses.push(expenses[i-2] * (1 + revenueGrowth * 0.8)); // Expenses grow slower
-        }
-      }
-      
-      // Calculate depreciation
-      let depreciationSchedule = calculateDepreciation(initialInvestment, salvageValue, projectLife, depreciationMethod);
-      
-      // Calculate EBIT, EBITDA, and other metrics
-      let ebit = [];
-      let ebitda = [];
-      let taxableIncome = [];
-      let taxes = [];
-      let netIncome = [];
-      let freeCashFlows = [];
-      
-      for (let i = 0; i < projectLife; i++) {
-        ebit.push(revenues[i] - cogs[i] - expenses[i]);
-        ebitda.push(ebit[i] + depreciationSchedule[i]);
-        taxableIncome.push(ebit[i] - depreciationSchedule[i]);
-        taxes.push(Math.max(0, taxableIncome[i]) * taxRate);
-        netIncome.push(taxableIncome[i] - taxes[i]);
-        
-        // Free Cash Flow = EBIT*(1-tax) + Depreciation - Capex - ΔWorkingCapital
-        let fcf = (ebit[i] * (1 - taxRate)) + depreciationSchedule[i] - capex - (i === 0 ? workingCapital : 0);
-        freeCashFlows.push(fcf);
-      }
-      
-      // Add salvage value to last year's FCF
-      freeCashFlows[freeCashFlows.length - 1] += salvageValue;
-      
-      // Calculate NPV
-      let npv = -initialInvestment;
-      for (let i = 0; i < freeCashFlows.length; i++) {
-        npv += freeCashFlows[i] / Math.pow(1 + discountRate, i + 1);
-      }
-      
-      // Calculate IRR (simplified)
-      let irr = calculateIRR(initialInvestment, freeCashFlows);
-      
-      // Calculate Payback Period
-      let paybackPeriod = calculatePaybackPeriod(initialInvestment, freeCashFlows);
-      
-      // Calculate Profitability Index
-      let pvInflows = 0;
-      for (let i = 0; i < freeCashFlows.length; i++) {
-        pvInflows += freeCashFlows[i] / Math.pow(1 + discountRate, i + 1);
-      }
-      let profitabilityIndex = pvInflows / initialInvestment;
-      
-      // Calculate ROI
-      let totalCashInflows = freeCashFlows.reduce((sum, fcf) => sum + fcf, 0);
-      let roi = ((totalCashInflows - initialInvestment) / initialInvestment) * 100;
-      
-      // Update results
-      document.getElementById('npvResult').textContent = `₹${npv.toFixed(2)}`;
-      document.getElementById('npvResult').className = `metric-value ${npv >= 0 ? 'positive' : 'negative'}`;
-      
-      document.getElementById('irrResult').textContent = `${(irr * 100).toFixed(2)}%`;
-      document.getElementById('irrResult').className = `metric-value ${irr >= discountRate ? 'positive' : 'negative'}`;
-      
-      document.getElementById('paybackResult').textContent = `${paybackPeriod} ${paybackPeriod === 1 ? 'yr' : 'yrs'}`;
-      
-      document.getElementById('piResult').textContent = profitabilityIndex.toFixed(2);
-      document.getElementById('piResult').className = `metric-value ${profitabilityIndex >= 1 ? 'positive' : 'negative'}`;
-      
-      document.getElementById('roiResult').textContent = `${roi.toFixed(2)}%`;
-      document.getElementById('roiResult').className = `metric-value ${roi >= 0 ? 'positive' : 'negative'}`;
-      
-      // Investment decision
-      let decision = '';
-      if (npv >= 0 && irr >= discountRate && profitabilityIndex >= 1) {
-        decision = 'ACCEPT - Project meets all investment criteria';
-      } else {
-        decision = 'REJECT - Project does not meet investment criteria';
-      }
-      document.getElementById('decisionResult').textContent = decision;
-      document.getElementById('decisionResult').className = `result-value ${npv >= 0 ? 'positive' : 'negative'}`;
-      
-      // Generate financial statements
-      generateIncomeStatement(revenues, cogs, expenses, depreciationSchedule, taxableIncome, taxes, netIncome);
-      generateBalanceSheet(initialInvestment, depreciationSchedule, freeCashFlows);
-      generateCashFlowStatement(freeCashFlows, depreciationSchedule);
-      
-      // Generate depreciation table
-      generateDepreciationTable(initialInvestment, depreciationSchedule);
-      
-      // Generate FCF table
-      generateFCFTable(ebit, depreciationSchedule, taxes, capex, workingCapital, freeCashFlows);
-      
-      // Calculate and display ratios
-      calculateRatios(revenues, cogs, ebit, initialInvestment, freeCashFlows);
-      
-      // Calculate valuation metrics
-      calculateValuationMetrics(freeCashFlows, wacc);
-    }
-    
-    // Depreciation calculation
-    function calculateDepreciation(initialValue, salvageValue, life, method) {
-      let schedule = [];
-      let depreciableAmount = initialValue - salvageValue;
-      
-      switch(method) {
-        case 'straight':
-          const annualDep = depreciableAmount / life;
-          for (let i = 0; i < life; i++) {
-            schedule.push(annualDep);
-          }
-          break;
-          
-        case 'double':
-          const straightRate = 1 / life;
-          const doubleRate = 2 * straightRate;
-          let remainingValue = initialValue;
-          
-          for (let i = 0; i < life; i++) {
-            let depreciation = remainingValue * doubleRate;
-            // In last year, depreciate to salvage value
-            if (i === life - 1 || (remainingValue - depreciation) < salvageValue) {
-              depreciation = remainingValue - salvageValue;
-            }
-            schedule.push(depreciation);
-            remainingValue -= depreciation;
-          }
-          break;
-          
-        case 'sum':
-          const sumOfYears = life * (life + 1) / 2;
-          for (let i = 0; i < life; i++) {
-            const remainingLife = life - i;
-            const dep = (remainingLife / sumOfYears) * depreciableAmount;
-            schedule.push(dep);
-          }
-          break;
-          
-        default:
-          schedule = Array(life).fill(0);
-      }
-      
-      return schedule;
-    }
-    
-    // IRR calculation (simplified)
-    function calculateIRR(initialInvestment, cashFlows) {
-      let precision = 0.0001;
-      let maxIterations = 1000;
-      let iterations = 0;
-      
-      function npvForRate(rate) {
-        let total = -initialInvestment;
-        for (let i = 0; i < cashFlows.length; i++) {
-          total += cashFlows[i] / Math.pow(1 + rate, i + 1);
-        }
-        return total;
-      }
-      
-      let low = -0.99;
-      let high = 5.0; // 500% max
-      
-      while (iterations < maxIterations) {
-        let mid = (low + high) / 2;
-        let npvMid = npvForRate(mid);
-        
-        if (Math.abs(npvMid) < precision) {
-          return mid;
-        } else if (npvMid > 0) {
-          low = mid;
-        } else {
-          high = mid;
-        }
-        
-        iterations++;
-      }
-      
-      return (low + high) / 2;
-    }
-    
-    // Payback period calculation
-    function calculatePaybackPeriod(initialInvestment, cashFlows) {
-      let cumulativeCashFlow = -initialInvestment;
-      let paybackPeriod = cashFlows.length;
-      
-      for (let i = 0; i < cashFlows.length; i++) {
-        cumulativeCashFlow += cashFlows[i];
-        if (cumulativeCashFlow >= 0) {
-          paybackPeriod = i + 1;
-          break;
-        }
-      }
-      
-      return paybackPeriod;
-    }
-    
-    // Generate income statement
-    function generateIncomeStatement(revenues, cogs, expenses, depreciation, taxableIncome, taxes, netIncome) {
-      let html = `
-        <table>
-          <tr>
-            <th>Year</th>
-            <th>Revenue</th>
-            <th>COGS</th>
-            <th>Gross Profit</th>
-            <th>Operating Expenses</th>
-            <th>EBITDA</th>
-            <th>Depreciation</th>
-            <th>EBIT</th>
-            <th>Tax</th>
-            <th>Net Income</th>
-          </tr>
-      `;
-      
-      for (let i = 0; i < revenues.length; i++) {
-        html += `
-          <tr>
-            <td>${i + 1}</td>
-            <td>₹${revenues[i].toFixed(2)}</td>
-            <td>₹${cogs[i].toFixed(2)}</td>
-            <td>₹${(revenues[i] - cogs[i]).toFixed(2)}</td>
-            <td>₹${expenses[i].toFixed(2)}</td>
-            <td>₹${(revenues[i] - cogs[i] - expenses[i] + depreciation[i]).toFixed(2)}</td>
-            <td>₹${depreciation[i].toFixed(2)}</td>
-            <td>₹${taxableIncome[i].toFixed(2)}</td>
-            <td>₹${taxes[i].toFixed(2)}</td>
-            <td>₹${netIncome[i].toFixed(2)}</td>
-          </tr>
-        `;
-      }
-      
-      html += `</table>`;
-      document.getElementById('incomeStatement').innerHTML = html;
-    }
-    
-    // Generate balance sheet (simplified)
-    function generateBalanceSheet(initialInvestment, depreciation, cashFlows) {
-      let html = `
-        <table>
-          <tr>
-            <th>Year</th>
-            <th>Assets</th>
-            <th>PP&E (Net)</th>
-            <th>Cash</th>
-            <th>Total Assets</th>
-            <th>Liabilities</th>
-            <th>Equity</th>
-            <th>Total Liab. & Equity</th>
-          </tr>
-      `;
-      
-      let accumulatedDepreciation = 0;
-      let cashBalance = 0;
-      
-      for (let i = 0; i < depreciation.length; i++) {
-        accumulatedDepreciation += depreciation[i];
-        cashBalance += cashFlows[i];
-        
-        html += `
-          <tr>
-            <td>${i + 1}</td>
-            <td>₹${initialInvestment.toFixed(2)}</td>
-            <td>₹${(initialInvestment - accumulatedDepreciation).toFixed(2)}</td>
-            <td>₹${cashBalance.toFixed(2)}</td>
-            <td>₹${(initialInvestment - accumulatedDepreciation + cashBalance).toFixed(2)}</td>
-            <td>₹${(initialInvestment * financialData.debtRatio).toFixed(2)}</td>
-            <td>₹${(initialInvestment * (1 - financialData.debtRatio) + cashBalance).toFixed(2)}</td>
-            <td>₹${(initialInvestment + cashBalance).toFixed(2)}</td>
-          </tr>
-        `;
-      }
-      
-      html += `</table>`;
-      document.getElementById('balanceSheet').innerHTML = html;
-    }
-    
-    // Generate cash flow statement
-    function generateCashFlowStatement(cashFlows, depreciation) {
-      let html = `
-        <table>
-          <tr>
-            <th>Year</th>
-            <th>Net Income</th>
-            <th>Depreciation</th>
-            <th>Operating Cash Flow</th>
-            <th>Capex</th>
-            <th>Working Capital</th>
-            <th>Free Cash Flow</th>
-          </tr>
-      `;
-      
-      for (let i = 0; i < cashFlows.length; i++) {
-        // Simplified calculation - in reality would use actual changes
-        let operatingCashFlow = cashFlows[i] + financialData.capex + (i === 0 ? financialData.workingCapital : 0) - depreciation[i];
-        
-        html += `
-          <tr>
-            <td>${i + 1}</td>
-            <td>₹${(operatingCashFlow - depreciation[i]).toFixed(2)}</td>
-            <td>₹${depreciation[i].toFixed(2)}</td>
-            <td>₹${operatingCashFlow.toFixed(2)}</td>
-            <td>₹${(-financialData.capex).toFixed(2)}</td>
-            <td>₹${(i === 0 ? -financialData.workingCapital : 0).toFixed(2)}</td>
-            <td>₹${cashFlows[i].toFixed(2)}</td>
-          </tr>
-        `;
-      }
-      
-      html += `</table>`;
-      document.getElementById('cashFlowStatement').innerHTML = html;
-    }
-    
-    // Generate depreciation table
-    function generateDepreciationTable(initialValue, depreciationSchedule) {
-      let html = `
-        <table>
-          <tr>
-            <th>Year</th>
-            <th>Beginning Value</th>
-            <th>Depreciation</th>
-            <th>Ending Value</th>
-            <th>Method</th>
-          </tr>
-      `;
-      
-      let beginningValue = initialValue;
-      
-      for (let i = 0; i < depreciationSchedule.length; i++) {
-        const endingValue = beginningValue - depreciationSchedule[i];
-        
-        html += `
-          <tr>
-            <td>${i + 1}</td>
-            <td>₹${beginningValue.toFixed(2)}</td>
-            <td>₹${depreciationSchedule[i].toFixed(2)}</td>
-            <td>₹${endingValue.toFixed(2)}</td>
-            <td>${document.getElementById('depreciationMethod').value}</td>
-          </tr>
-        `;
-        
-        beginningValue = endingValue;
-      }
-      
-      html += `</table>`;
-      document.getElementById('depreciationTable').innerHTML = html;
-    }
-    
-    // Generate FCF table
-    function generateFCFTable(ebit, depreciation, taxes, capex, workingCapital, freeCashFlows) {
-      let html = `
-        <table>
-          <tr>
-            <th>Year</th>
-            <th>EBIT</th>
-            <th>Taxes</th>
-            <th>EBIT(1-T)</th>
-            <th>Depreciation</th>
-            <th>Capex</th>
-            <th>Working Capital</th>
-            <th>Free Cash Flow</th>
-          </tr>
-      `;
-      
-      for (let i = 0; i < ebit.length; i++) {
-        html += `
-          <tr>
-            <td>${i + 1}</td>
-            <td>₹${ebit[i].toFixed(2)}</td>
-            <td>₹${taxes[i].toFixed(2)}</td>
-            <td>₹${(ebit[i] * (1 - financialData.taxRate)).toFixed(2)}</td>
-            <td>₹${depreciation[i].toFixed(2)}</td>
-            <td>₹${(-capex).toFixed(2)}</td>
-            <td>₹${(i === 0 ? -workingCapital : 0).toFixed(2)}</td>
-            <td>₹${freeCashFlows[i].toFixed(2)}</td>
-          </tr>
-        `;
-      }
-      
-      html += `</table>`;
-      document.getElementById('fcfTable').innerHTML = html;
-    }
-    
-    // Calculate financial ratios
-    function calculateRatios(revenues, cogs, ebit, initialInvestment, freeCashFlows) {
-      // Current ratio (simplified)
-      const currentAssets = freeCashFlows[0] * 2; // Approximation
-      const currentLiabilities = initialInvestment * 0.3; // Approximation
-      const currentRatio = currentAssets / currentLiabilities;
-      document.getElementById('currentRatio').textContent = currentRatio.toFixed(2);
-      
-      // Debt-to-equity
-      const debt = initialInvestment * financialData.debtRatio;
-      const equity = initialInvestment * (1 - financialData.debtRatio);
-      const deRatio = debt / equity;
-      document.getElementById('deRatio').textContent = deRatio.toFixed(2);
-      
-      // Gross margin
-      const grossMargin = ((revenues[0] - cogs[0]) / revenues[0]) * 100;
-      document.getElementById('grossMargin').textContent = `${grossMargin.toFixed(2)}%`;
-      
-      // Operating margin
-      const operatingMargin = (ebit[0] / revenues[0]) * 100;
-      document.getElementById('operatingMarginResult').textContent = `${operatingMargin.toFixed(2)}%`;
-    }
-    
-    // Calculate valuation metrics
-    function calculateValuationMetrics(freeCashFlows, wacc) {
-      // Terminal value (simplified - using perpetuity growth method)
-      const terminalGrowth = 0.02; // 2% long-term growth
-      const lastFCF = freeCashFlows[freeCashFlows.length - 1];
-      const terminalValue = (lastFCF * (1 + terminalGrowth)) / (wacc - terminalGrowth);
-      
-      // DCF value
-      let dcfValue = 0;
-      for (let i = 0; i < freeCashFlows.length; i++) {
-        dcfValue += freeCashFlows[i] / Math.pow(1 + wacc, i + 1);
-      }
-      dcfValue += terminalValue / Math.pow(1 + wacc, freeCashFlows.length);
-      
-      // Enterprise Value (simplified)
-      const evValue = dcfValue;
-      
-      // EBITDA multiple (simplified)
-      const ebitdaMultiple = 8; // Industry average approximation
-      
-      document.getElementById('dcfValue').textContent = `₹${dcfValue.toFixed(2)}`;
-      document.getElementById('evValue').textContent = `₹${evValue.toFixed(2)}`;
-      document.getElementById('ebitdaMultiple').textContent = `${ebitdaMultiple.toFixed(2)}x`;
-    }
-    
-    // Initialize the calculator
-    window.onload = function() {
-      generateCashFlowInputs();
-    };
-  </script>
+        <div class="tabs">
+            <button class="tablink active" onclick="openTab('input-tab')">Input Data</button>
+            <button class="tablink" onclick="openTab('income-tab')">Income Statement</button>
+            <button class="tablink" onclick="openTab('balance-tab')">Balance Sheet</button>
+            <button class="tablink" onclick="openTab('cashflow-tab')">Cash Flow</button>
+            <button class="tablink" onclick="openTab('summary-tab')">Financial Summary</button>
+        </div>
+
+        <!-- Input Data Tab -->
+        <div id="input-tab" class="tabcontent" style="display: block;">
+            <form id="financial-data-form">
+                <div class="form-section">
+                    <h3>Income Statement Data</h3>
+                    <div class="form-group">
+                        <label for="revenue">Total Revenue:</label>
+                        <input type="number" id="revenue" placeholder="Enter total revenue">
+                    </div>
+                    <div class="form-group">
+                        <label for="cogs">Cost of Goods Sold:</label>
+                        <input type="number" id="cogs" placeholder="Enter COGS">
+                    </div>
+                    <div class="form-group">
+                        <label for="operating-expenses">Operating Expenses:</label>
+                        <input type="number" id="operating-expenses" placeholder="Enter operating expenses">
+                    </div>
+                    <div class="form-group">
+                        <label for="interest-expense">Interest Expense:</label>
+                        <input type="number" id="interest-expense" placeholder="Enter interest expense">
+                    </div>
+                    <div class="form-group">
+                        <label for="taxes">Taxes:</label>
+                        <input type="number" id="taxes" placeholder="Enter taxes">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Balance Sheet Data</h3>
+                    <div class="form-group">
+                        <label for="cash">Cash:</label>
+                        <input type="number" id="cash" placeholder="Enter cash amount">
+                    </div>
+                    <div class="form-group">
+                        <label for="accounts-receivable">Accounts Receivable:</label>
+                        <input type="number" id="accounts-receivable" placeholder="Enter accounts receivable">
+                    </div>
+                    <div class="form-group">
+                        <label for="inventory">Inventory:</label>
+                        <input type="number" id="inventory" placeholder="Enter inventory value">
+                    </div>
+                    <div class="form-group">
+                        <label for="property-equipment">Property & Equipment:</label>
+                        <input type="number" id="property-equipment" placeholder="Enter property & equipment value">
+                    </div>
+                    <div class="form-group">
+                        <label for="accounts-payable">Accounts Payable:</label>
+                        <input type="number" id="accounts-payable" placeholder="Enter accounts payable">
+                    </div>
+                    <div class="form-group">
+                        <label for="short-term-debt">Short-term Debt:</label>
+                        <input type="number" id="short-term-debt" placeholder="Enter short-term debt">
+                    </div>
+                    <div class="form-group">
+                        <label for="long-term-debt">Long-term Debt:</label>
+                        <input type="number" id="long-term-debt" placeholder="Enter long-term debt">
+                    </div>
+                    <div class="form-group">
+                        <label for="equity">Equity:</label>
+                        <input type="number" id="equity" placeholder="Enter equity amount">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Cash Flow Data</h3>
+                    <div class="form-group">
+                        <label for="depreciation">Depreciation:</label>
+                        <input type="number" id="depreciation" placeholder="Enter depreciation amount">
+                    </div>
+                    <div class="form-group">
+                        <label for="capital-expenditures">Capital Expenditures:</label>
+                        <input type="number" id="capital-expenditures" placeholder="Enter capital expenditures">
+                    </div>
+                    <div class="form-group">
+                        <label for="dividends">Dividends Paid:</label>
+                        <input type="number" id="dividends" placeholder="Enter dividends paid">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Additional Information</h3>
+                    <div class="form-group">
+                        <label for="company-name">Company Name:</label>
+                        <input type="text" id="company-name" placeholder="Enter company name">
+                    </div>
+                    <div class="form-group">
+                        <label for="reporting-period">Reporting Period:</label>
+                        <select id="reporting-period">
+                            <option value="Q1">Q1</option>
+                            <option value="Q2">Q2</option>
+                            <option value="Q3">Q3</option>
+                            <option value="Q4">Q4</option>
+                            <option value="Annual" selected>Annual</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="year">Year:</label>
+                        <input type="number" id="year" placeholder="Enter year" value="2023">
+                    </div>
+                </div>
+
+                <button type="button" onclick="calculateFinancials()" class="calculate-btn">Calculate Financial Statements</button>
+            </form>
+        </div>
+
+        <!-- Income Statement Tab -->
+        <div id="income-tab" class="tabcontent">
+            <div class="statement-container" id="income-statement">
+                <h2 id="income-statement-title">Income Statement</h2>
+                <table>
+                    <tr>
+                        <th>Item</th>
+                        <th>Amount</th>
+                    </tr>
+                    <tr>
+                        <td>Revenue</td>
+                        <td id="is-revenue">$0</td>
+                    </tr>
+                    <tr>
+                        <td>Cost of Goods Sold</td>
+                        <td id="is-cogs">$0</td>
+                    </tr>
+                    <tr class="subtotal">
+                        <td>Gross Profit</td>
+                        <td id="is-gross-profit">$0</td>
+                    </tr>
+                    <tr>
+                        <td>Operating Expenses</td>
+                        <td id="is-operating-expenses">$0</td>
+                    </tr>
+                    <tr>
+                        <td>Depreciation</td>
+                        <td id="is-depreciation">$0</td>
+                    </tr>
+                    <tr class="subtotal">
+                        <td>Operating Income</td>
+                        <td id="is-operating-income">$0</td>
+                    </tr>
+                    <tr>
+                        <td>Interest Expense</td>
+                        <td id="is-interest-expense">$0</td>
+                    </tr>
+                    <tr class="subtotal">
+                        <td>Income Before Taxes</td>
+                        <td id="is-income-before-taxes">$0</td>
+                    </tr>
+                    <tr>
+                        <td>Taxes</td>
+                        <td id="is-taxes">$0</td>
+                    </tr>
+                    <tr class="total">
+                        <td>Net Income</td>
+                        <td id="is-net-income">$0</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="action-buttons">
+                <button onclick="printStatement('income-statement')">Print Income Statement</button>
+                <button onclick="downloadPDF('income-statement', 'Income_Statement')">Download as PDF</button>
+            </div>
+        </div>
+
+        <!-- Balance Sheet Tab -->
+        <div id="balance-tab" class="tabcontent">
+            <div class="statement-container" id="balance-sheet">
+                <h2 id="balance-sheet-title">Balance Sheet</h2>
+                <div class="balance-sheet-sections">
+                    <div class="assets-section">
+                        <h3>Assets</h3>
+                        <table>
+                            <tr>
+                                <td>Cash</td>
+                                <td id="bs-cash">$0</td>
+                            </tr>
+                            <tr>
+                                <td>Accounts Receivable</td>
+                                <td id="bs-accounts-receivable">$0</td>
+                            </tr>
+                            <tr>
+                                <td>Inventory</td>
+                                <td id="bs-inventory">$0</td>
+                            </tr>
+                            <tr class="subtotal">
+                                <td>Total Current Assets</td>
+                                <td id="bs-total-current-assets">$0</td>
+                            </tr>
+                            <tr>
+                                <td>Property & Equipment</td>
+                                <td id="bs-property-equipment">$0</td>
+                            </tr>
+                            <tr class="total">
+                                <td>Total Assets</td>
+                                <td id="bs-total-assets">$0</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="liabilities-equity-section">
+                        <h3>Liabilities & Equity</h3>
+                        <table>
+                            <tr>
+                                <td>Accounts Payable</td>
+                                <td id="bs-accounts-payable">$0</td>
+                            </tr>
+                            <tr>
+                                <td>Short-term Debt</td>
+                                <td id="bs-short-term-debt">$0</td>
+                            </tr>
+                            <tr class="subtotal">
+                                <td>Total Current Liabilities</td>
+                                <td id="bs-total-current-liabilities">$0</td>
+                            </tr>
+                            <tr>
+                                <td>Long-term Debt</td>
+                                <td id="bs-long-term-debt">$0</td>
+                            </tr>
+                            <tr class="subtotal">
+                                <td>Total Liabilities</td>
+                                <td id="bs-total-liabilities">$0</td>
+                            </tr>
+                            <tr>
+                                <td>Equity</td>
+                                <td id="bs-equity">$0</td>
+                            </tr>
+                            <tr class="total">
+                                <td>Total Liabilities & Equity</td>
+                                <td id="bs-total-liabilities-equity">$0</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button onclick="printStatement('balance-sheet')">Print Balance Sheet</button>
+                <button onclick="downloadPDF('balance-sheet', 'Balance_Sheet')">Download as PDF</button>
+            </div>
+        </div>
+
+        <!-- Cash Flow Tab -->
+        <div id="cashflow-tab" class="tabcontent">
+            <div class="statement-container" id="cash-flow-statement">
+                <h2 id="cash-flow-title">Cash Flow Statement</h2>
+                <table>
+                    <tr class="section-header">
+                        <th colspan="2">Operating Activities</th>
+                    </tr>
+                    <tr>
+                        <td>Net Income</td>
+                        <td id="cf-net-income">$0</td>
+                    </tr>
+                    <tr>
+                        <td>Depreciation</td>
+                        <td id="cf-depreciation">$0</td>
+                    </tr>
+                    <tr>
+                        <td>Changes in Working Capital</td>
+                        <td id="cf-working-capital">$0</td>
+                    </tr>
+                    <tr class="subtotal">
+                        <td>Net Cash from Operating Activities</td>
+                        <td id="cf-cash-from-operations">$0</td>
+                    </tr>
+                    
+                    <tr class="section-header">
+                        <th colspan="2">Investing Activities</th>
+                    </tr>
+                    <tr>
+                        <td>Capital Expenditures</td>
+                        <td id="cf-capital-expenditures">$0</td>
+                    </tr>
+                    <tr class="subtotal">
+                        <td>Net Cash from Investing Activities</td>
+                        <td id="cf-cash-from-investing">$0</td>
+                    </tr>
+                    
+                    <tr class="section-header">
+                        <th colspan="2">Financing Activities</th>
+                    </tr>
+                    <tr>
+                        <td>Dividends Paid</td>
+                        <td id="cf-dividends">$0</td>
+                    </tr>
+                    <tr>
+                        <td>Debt Issued/Repaid</td>
+                        <td id="cf-debt">$0</td>
+                    </tr>
+                    <tr class="subtotal">
+                        <td>Net Cash from Financing Activities</td>
+                        <td id="cf-cash-from-financing">$0</td>
+                    </tr>
+                    
+                    <tr class="total">
+                        <td>Net Change in Cash</td>
+                        <td id="cf-net-change-cash">$0</td>
+                    </tr>
+                    <tr>
+                        <td>Beginning Cash</td>
+                        <td id="cf-beginning-cash">$0</td>
+                    </tr>
+                    <tr class="total">
+                        <td>Ending Cash</td>
+                        <td id="cf-ending-cash">$0</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="action-buttons">
+                <button onclick="printStatement('cash-flow-statement')">Print Cash Flow Statement</button>
+                <button onclick="downloadPDF('cash-flow-statement', 'Cash_Flow_Statement')">Download as PDF</button>
+            </div>
+        </div>
+
+        <!-- Financial Summary Tab -->
+        <div id="summary-tab" class="tabcontent">
+            <div class="statement-container" id="financial-summary">
+                <h2 id="financial-summary-title">Financial Summary</h2>
+                <div class="summary-metrics">
+                    <div class="metric-card">
+                        <h3>Profitability</h3>
+                        <p>Gross Margin: <span id="summary-gross-margin">0%</span></p>
+                        <p>Operating Margin: <span id="summary-operating-margin">0%</span></p>
+                        <p>Net Profit Margin: <span id="summary-net-margin">0%</span></p>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Liquidity</h3>
+                        <p>Current Ratio: <span id="summary-current-ratio">0.0</span></p>
+                        <p>Quick Ratio: <span id="summary-quick-ratio">0.0</span></p>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Leverage</h3>
+                        <p>Debt to Equity: <span id="summary-debt-equity">0.0</span></p>
+                        <p>Interest Coverage: <span id="summary-interest-coverage">0.0</span></p>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Efficiency</h3>
+                        <p>Inventory Turnover: <span id="summary-inventory-turnover">0.0</span></p>
+                        <p>Receivables Turnover: <span id="summary-receivables-turnover">0.0</span></p>
+                    </div>
+                </div>
+                <div class="summary-charts">
+                    <canvas id="profitabilityChart"></canvas>
+                    <canvas id="liquidityChart"></canvas>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button onclick="printStatement('financial-summary')">Print Financial Summary</button>
+                <button onclick="downloadPDF('financial-summary', 'Financial_Summary')">Download as PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
